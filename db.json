@@ -1,0 +1,111 @@
+{
+  "users": [
+    {
+      "id": "c225",
+      "name": "Ayisha",
+      "email": "abc@gmail.com",
+      "password": "741852"
+    },
+    {
+      "id": "de5c",
+      "name": "anu",
+      "email": "anu@gmail.com",
+      "password": "anusree"
+    },
+    {
+      "id": "4d71",
+      "name": "raeed",
+      "email": "raeed@gmail.com",
+      "password": "raeed1997"
+    },
+    {
+      "id": "80ee",
+      "name": "niya",
+      "email": "niya@gmail.com",
+      "password": "nizra1"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "eeb4",
+      "name": "english",
+      "hours": "5"
+    },
+    {
+      "id": "766a",
+      "name": "malayalam",
+      "hours": "2"
+    },
+    {
+      "id": "514c",
+      "name": "english",
+      "hours": "2"
+    },
+    {
+      "id": "c828",
+      "name": "Arabic",
+      "hours": "3",
+      "userId": "4d71"
+    },
+    {
+      "id": "9f15",
+      "name": "English",
+      "hours": "2",
+      "userId": "4d71"
+    },
+    {
+      "name": "business",
+      "hours": "2.5",
+      "userId": "80ee",
+      "id": "0bbe"
+    },
+    {
+      "id": "9a1b",
+      "name": "python",
+      "hours": "2",
+      "userId": "de5c"
+    },
+    {
+      "name": "Business",
+      "hours": "1.5",
+      "userId": "4d71",
+      "id": "6e97"
+    },
+    {
+      "id": "a4c4",
+      "name": "Malayalam",
+      "hours": "2",
+      "userId": "c225"
+    },
+    {
+      "name": "English",
+      "hours": "2",
+      "userId": "c225",
+      "id": "95f0"
+    },
+    {
+      "id": "7e6a",
+      "name": "Hindi",
+      "hours": "3",
+      "userId": "c225"
+    },
+    {
+      "id": "b853",
+      "name": "English",
+      "hours": "1.5",
+      "userId": "80ee"
+    },
+    {
+      "id": "85a2",
+      "name": "Mathematics",
+      "hours": "4",
+      "userId": "80ee"
+    },
+    {
+      "id": "0285",
+      "name": "react",
+      "hours": "2",
+      "userId": "de5c"
+    }
+  ]
+}
