@@ -1,14 +1,17 @@
 import { Navbar, Nav, Container, Button } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../redux/authSlice"
 
 function AppNavbar() {
   const [expanded, setExpanded] = useState(false)
   const navigate = useNavigate()
-  const user = localStorage.getItem("user")
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.auth.user)
 
   const handleLogout = () => {
-    localStorage.removeItem("user")
+    dispatch(logout())
     navigate("/")
   }
 

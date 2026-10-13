@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "c225",
-      "name": "Ayisha",
+      "name": "Ayisha Nafla",
       "email": "abc@gmail.com",
       "password": "741852"
     },
@@ -14,7 +14,7 @@
     },
     {
       "id": "4d71",
-      "name": "raeed",
+      "name": "Raeed",
       "email": "raeed@gmail.com",
       "password": "raeed1997"
     },
@@ -66,16 +66,10 @@
       "userId": "de5c"
     },
     {
-      "name": "Business",
-      "hours": "1.5",
-      "userId": "4d71",
-      "id": "6e97"
-    },
-    {
-      "id": "a4c4",
-      "name": "Malayalam",
+      "name": "JavaScript",
       "hours": "2",
-      "userId": "c225"
+      "userId": "c225",
+      "id": "a4c4"
     },
     {
       "name": "English",
@@ -84,10 +78,10 @@
       "id": "95f0"
     },
     {
-      "id": "7e6a",
-      "name": "Hindi",
+      "name": "React",
       "hours": "3",
-      "userId": "c225"
+      "userId": "c225",
+      "id": "7e6a"
     },
     {
       "id": "b853",
