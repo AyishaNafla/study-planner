@@ -1,22 +1,27 @@
 import { Form, Button, Alert } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import axios from "axios"
-import API_URL from "../api"
+import {
+  useLazyCheckEmailQuery,
+  useRegisterUserMutation,
+} from "../redux/apiSlice"
 
 function Register() {
 
   const navigate = useNavigate()
+  const [checkEmail] = useLazyCheckEmailQuery()
+  const [registerUser, { isLoading }] = useRegisterUserMutation()
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
+
   const handleRegister = async (e) => {
     e.preventDefault()
 
-    if (!name || !email || !password) {
+    if (!name.trim() || !email.trim() || !password) {
       setError("All fields are required")
       return
     }
@@ -26,27 +31,28 @@ function Register() {
       return
     }
 
-    try {
-      const existingUser = await axios.get(
-        `${API_URL}/users?email=${email}`
-      )
+    setError("")
 
-      if (existingUser.data.length > 0) {
+    try {
+      const existingUsers = await checkEmail(email.trim()).unwrap()
+
+      if (existingUsers.length > 0) {
         setError("Email already registered")
         return
       }
 
-      await axios.post(`${API_URL}/users`, {
-        name,
-        email,
+      await registerUser({
+        name: name.trim(),
+        email: email.trim(),
         password,
-      })
+      }).unwrap()
 
       navigate("/")
     } catch {
-      setError("Registration failed")
+      setError("Registration failed. Please try again.")
     }
   }
+
 
   return (
     <div className="auth-container">
@@ -83,8 +89,8 @@ function Register() {
             />
           </Form.Group>
 
-          <Button variant="success" type="submit">
-            Register
+          <Button variant="success" type="submit" disabled={isLoading}>
+            {isLoading ? "Registering..." : "Register"}
           </Button>
         </Form>
 

@@ -1,33 +1,24 @@
-import { useEffect, useState } from "react"
-import axios from "axios"
-import API_URL from "../api"
+import { useState } from "react"
+import { useGetSubjectsQuery } from "../redux/apiSlice"
 import { Container, Row, Col, Card, ProgressBar, Button, Form } from "react-bootstrap"
 
 function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"))
   const loggedInUserId = user?.id
 
-  const [subjects, setSubjects] = useState([])
+  const {
+    data: subjects = [],
+    isLoading,
+    isError,
+  } = useGetSubjectsQuery(loggedInUserId, {
+    skip: !loggedInUserId,
+  })
   const [selectedCard, setSelectedCard] = useState(null)
 
   const [targetHours, setTargetHours] = useState(
     Number(localStorage.getItem(`targetHours_${loggedInUserId}`)) || 50
   )
 
-  useEffect(() => {
-    const loadSubjects = async () => {
-      try {
-        const res = await axios.get(
-          `${API_URL}/subjects?userId=${loggedInUserId}`
-        )
-        setSubjects(res.data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
-    loadSubjects()
-  }, [loggedInUserId])
 
   //calculations
   const totalSubjects = subjects.length
@@ -59,6 +50,16 @@ function Dashboard() {
       <h2 className="text-center mb-4">
         Welcome {user?.name}
       </h2>
+
+      {isLoading && (
+        <p className="text-center">Loading dashboard...</p>
+      )}
+
+      {isError && (
+        <p className="text-center text-danger">
+          Failed to load dashboard data. Please try again.
+        </p>
+      )}
 
       <Row className="mb-4">
         <Col md={6}>

@@ -1,8 +1,7 @@
 import { Container, Form, Button, Alert } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import axios from "axios"
-import API_URL from "../api"
+import { useLazyGetUserByEmailQuery } from "../redux/apiSlice"
 import { useDispatch } from "react-redux"
 import { login } from "../redux/authSlice"
 
@@ -10,25 +9,26 @@ function Login() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [getUserByEmail, { isLoading }] = useLazyGetUserByEmailQuery()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
+
   const handleLogin = async (e) => {
     e.preventDefault()
 
-    if (!email || !password) {
+    if (!email.trim() || !password) {
       setError("All fields are required")
       return
     }
 
-    try {
-      const res = await axios.get(
-        `${API_URL}/users?email=${email}`
-      )
+    setError("")
 
-      const user = res.data[0]
+    try {
+      const res = await getUserByEmail(email.trim()).unwrap()
+      const user = res[0]
 
       if (!user || user.password !== password) {
         setError("Invalid credentials")
@@ -37,11 +37,11 @@ function Login() {
 
       dispatch(login(user))
       navigate("/dashboard")
-
     } catch {
-      setError("Login failed")
+      setError("Login failed. Please try again.")
     }
   }
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -68,8 +68,8 @@ function Login() {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Login
+          <Button variant="primary" type="submit" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
         </Form>
 

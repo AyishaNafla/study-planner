@@ -1,4 +1,3 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 
 // Restore the logged-in user from localStorage when the app starts.

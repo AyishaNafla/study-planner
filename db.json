@@ -20,9 +20,15 @@
     },
     {
       "id": "80ee",
-      "name": "niya",
+      "name": "Niya",
       "email": "niya@gmail.com",
       "password": "nizra1"
+    },
+    {
+      "name": "Ayisha Azrin",
+      "email": "azrin@gmail.com",
+      "password": "aachu123",
+      "id": "ca5b"
     }
   ],
   "subjects": [
@@ -48,13 +54,7 @@
       "userId": "4d71"
     },
     {
-      "id": "9f15",
-      "name": "English",
-      "hours": "2",
-      "userId": "4d71"
-    },
-    {
-      "name": "business",
+      "name": "Business",
       "hours": "2.5",
       "userId": "80ee",
       "id": "0bbe"
@@ -90,16 +90,46 @@
       "userId": "80ee"
     },
     {
-      "id": "85a2",
       "name": "Mathematics",
-      "hours": "4",
-      "userId": "80ee"
+      "hours": "2",
+      "userId": "80ee",
+      "id": "85a2"
     },
     {
       "id": "0285",
       "name": "react",
       "hours": "2",
       "userId": "de5c"
+    },
+    {
+      "name": "Business",
+      "hours": "2",
+      "userId": "4d71",
+      "id": "ce2c"
+    },
+    {
+      "id": "8d59",
+      "name": "Accountancy",
+      "hours": "2.5",
+      "userId": "4d71"
+    },
+    {
+      "id": "8282",
+      "name": "English",
+      "hours": "1",
+      "userId": "ca5b"
+    },
+    {
+      "name": "Maths",
+      "hours": "1",
+      "userId": "ca5b",
+      "id": "b6de"
+    },
+    {
+      "id": "418b",
+      "name": "EVS",
+      "hours": "1",
+      "userId": "ca5b"
     }
   ]
 }

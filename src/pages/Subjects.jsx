@@ -1,34 +1,31 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-
-import { useState, useCallback, useEffect } from "react"
-import axios from "axios"
-import API_URL from "../api"
+import { useState } from "react"
+import {
+  useGetSubjectsQuery,
+  useAddSubjectMutation,
+  useUpdateSubjectMutation,
+  useDeleteSubjectMutation,
+} from "../redux/apiSlice"
 import { Container, Form, Button, Card, Row, Col } from "react-bootstrap"
 
 function Subjects() {
-  const [subjects, setSubjects] = useState([])
+  const user = JSON.parse(localStorage.getItem("user"))
+  const loggedInUserId = user?.id
+  const {
+    data: fetchedSubjects = [],
+    isLoading,
+    isError,
+  } = useGetSubjectsQuery(loggedInUserId, {
+    skip: !loggedInUserId,
+  })
+  const [addSubject] = useAddSubjectMutation()
+  const [updateSubject] = useUpdateSubjectMutation()
+  const [deleteSubject] = useDeleteSubjectMutation()
   const [name, setName] = useState("")
   const [hours, setHours] = useState("")
   const [editId, setEditId] = useState(null)
 
-  const user = JSON.parse(localStorage.getItem("user"))
-  const loggedInUserId = user?.id
 
-  // fetch subjects
-  const fetchSubjects = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `${API_URL}/subjects?userId=${loggedInUserId}`
-      )
-      setSubjects(res.data)
-    } catch (err) {
-      console.log(err)
-    }
-  }, [loggedInUserId])
-
-  useEffect(() => {
-    fetchSubjects()
-  }, [fetchSubjects])
 
   // add OR update subject
   const handleSubmit = async (e) => {
@@ -41,39 +38,40 @@ function Subjects() {
     try {
       if (editId) {
         // UPDATE
-        await axios.put(`${API_URL}/subjects/${editId}`, {
+        await updateSubject({
+          id: editId,
           name: name.trim(),
           hours,
-          userId: loggedInUserId
-        })
+          userId: loggedInUserId,
+        }).unwrap()
 
         setEditId(null)
       } else {
         // ➕ ADD
-        await axios.post(`${API_URL}/subjects`, {
+        await addSubject({
           name: name.trim(),
           hours,
-          userId: loggedInUserId
-        })
+          userId: loggedInUserId,
+        }).unwrap()
       }
 
       setName("")
       setHours("")
-      fetchSubjects()
     } catch (err) {
       console.log(err)
     }
   }
 
+
   // delete
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/subjects/${id}`)
-      fetchSubjects()
+      await deleteSubject(id).unwrap()
     } catch (err) {
       console.log(err)
     }
   }
+
 
   // edit click
   const handleEdit = (sub) => {
@@ -118,9 +116,21 @@ function Subjects() {
         </Form>
       </Card>
 
+
       {/* List */}
+      {isLoading && (
+        <p className="text-center">Loading subjects...</p>
+      )}
+
+      {isError && (
+        <p className="text-center text-danger">
+          Failed to load subjects. Please try again.
+        </p>
+      )}
+
       <Row>
-        {subjects.map((sub) => (
+
+        {fetchedSubjects.map((sub) => (
           <Col md={4} key={sub.id} className="mb-3">
             <Card className="shadow-sm subject-card">
               <Card.Body>

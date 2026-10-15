@@ -1,10 +1,10 @@
 import { useState } from "react"
-import axios from "axios"
+import { useUpdateUserMutation } from "../redux/apiSlice"
 import { Form, Button, Alert, Card } from "react-bootstrap"
-import API_URL from "../api"
 
 function Profile() {
   const user = JSON.parse(localStorage.getItem("user"))
+  const [updateUser, { isLoading }] = useUpdateUserMutation()
 
   const [name, setName] = useState(user?.name || "")
   const [password, setPassword] = useState("")
@@ -34,10 +34,10 @@ function Profile() {
         ...(password && { password }),
       }
 
-      await axios.put(
-        `${API_URL}/users/${user.id}`,
-        updatedUser
-      )
+      await updateUser({
+        id: user.id,
+        ...updatedUser,
+      }).unwrap()
 
       localStorage.setItem("user", JSON.stringify(updatedUser))
 
@@ -85,8 +85,8 @@ function Profile() {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Update Profile
+          <Button variant="primary" type="submit" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update Profile"}
           </Button>
         </Form>
       </Card>
