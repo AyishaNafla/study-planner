@@ -5,6 +5,7 @@ import {
   useLazyCheckEmailQuery,
   useRegisterUserMutation,
 } from "../redux/apiSlice"
+import capitalizeWords from "../utils/formatText";
 
 function Register() {
 
@@ -42,7 +43,7 @@ function Register() {
       }
 
       await registerUser({
-        name: name.trim(),
+        name: capitalizeWords(name),
         email: email.trim(),
         password,
       }).unwrap()

@@ -1,3 +1,4 @@
+
 {
   "users": [
     {
@@ -8,7 +9,7 @@
     },
     {
       "id": "de5c",
-      "name": "anu",
+      "name": "Anu",
       "email": "anu@gmail.com",
       "password": "anusree"
     },
@@ -25,28 +26,13 @@
       "password": "nizra1"
     },
     {
+      "id": "ca5b",
       "name": "Ayisha Azrin",
       "email": "azrin@gmail.com",
-      "password": "aachu123",
-      "id": "ca5b"
+      "password": "aachu123"
     }
   ],
   "subjects": [
-    {
-      "id": "eeb4",
-      "name": "english",
-      "hours": "5"
-    },
-    {
-      "id": "766a",
-      "name": "malayalam",
-      "hours": "2"
-    },
-    {
-      "id": "514c",
-      "name": "english",
-      "hours": "2"
-    },
     {
       "id": "c828",
       "name": "Arabic",
@@ -54,34 +40,34 @@
       "userId": "4d71"
     },
     {
+      "id": "0bbe",
       "name": "Business",
       "hours": "2.5",
-      "userId": "80ee",
-      "id": "0bbe"
+      "userId": "80ee"
     },
     {
       "id": "9a1b",
-      "name": "python",
+      "name": "Python",
       "hours": "2",
       "userId": "de5c"
     },
     {
+      "id": "a4c4",
       "name": "JavaScript",
       "hours": "2",
-      "userId": "c225",
-      "id": "a4c4"
+      "userId": "c225"
     },
     {
+      "id": "95f0",
       "name": "English",
       "hours": "2",
-      "userId": "c225",
-      "id": "95f0"
+      "userId": "c225"
     },
     {
+      "id": "7e6a",
       "name": "React",
       "hours": "3",
-      "userId": "c225",
-      "id": "7e6a"
+      "userId": "c225"
     },
     {
       "id": "b853",
@@ -90,22 +76,16 @@
       "userId": "80ee"
     },
     {
+      "id": "85a2",
       "name": "Mathematics",
       "hours": "2",
-      "userId": "80ee",
-      "id": "85a2"
+      "userId": "80ee"
     },
     {
-      "id": "0285",
-      "name": "react",
-      "hours": "2",
-      "userId": "de5c"
-    },
-    {
+      "id": "ce2c",
       "name": "Business",
       "hours": "2",
-      "userId": "4d71",
-      "id": "ce2c"
+      "userId": "4d71"
     },
     {
       "id": "8d59",
@@ -120,15 +100,15 @@
       "userId": "ca5b"
     },
     {
-      "name": "Maths",
-      "hours": "1",
-      "userId": "ca5b",
-      "id": "b6de"
-    },
-    {
       "id": "418b",
       "name": "EVS",
       "hours": "1",
+      "userId": "ca5b"
+    },
+    {
+      "id": "7183",
+      "name": "Arabic",
+      "hours": "2",
       "userId": "ca5b"
     }
   ]

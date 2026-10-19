@@ -7,6 +7,7 @@ import {
   useDeleteSubjectMutation,
 } from "../redux/apiSlice"
 import { Container, Form, Button, Card, Row, Col } from "react-bootstrap"
+import capitalizeWords from "../utils/formatText"
 
 function Subjects() {
   const user = JSON.parse(localStorage.getItem("user"))
@@ -40,7 +41,7 @@ function Subjects() {
         // UPDATE
         await updateSubject({
           id: editId,
-          name: name.trim(),
+          name: capitalizeWords(name),
           hours,
           userId: loggedInUserId,
         }).unwrap()
@@ -49,7 +50,7 @@ function Subjects() {
       } else {
         // ➕ ADD
         await addSubject({
-          name: name.trim(),
+          name: capitalizeWords(name),
           hours,
           userId: loggedInUserId,
         }).unwrap()
@@ -81,7 +82,7 @@ function Subjects() {
   }
 
   return (
-    <Container className="mt-5 pt-4">
+    <Container className="dashboard-container">
       <h2 className="text-center mb-4">📚 Subjects</h2>
 
       {/* Form */}

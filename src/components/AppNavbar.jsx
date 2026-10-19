@@ -1,19 +1,23 @@
-import { Navbar, Nav, Container, Button } from "react-bootstrap"
-import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { logout } from "../redux/authSlice"
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/authSlice";
+import useTheme from "../hooks/useTheme";
 
 function AppNavbar() {
-  const [expanded, setExpanded] = useState(false)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const user = useSelector((state) => state.auth.user)
+  const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  // Get the current theme and theme toggle function.
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = () => {
-    dispatch(logout())
-    navigate("/")
-  }
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
     <Navbar
@@ -27,10 +31,7 @@ function AppNavbar() {
     >
       <Container>
         <Navbar.Brand as={Link} to="/" className="brand-logo">
-          <img
-            src="/favicon-sp.png"
-            alt="Study Planner logo"
-          />
+          <img src="/favicon-sp.png" alt="Study Planner logo" />
           <span>Study Planner</span>
         </Navbar.Brand>
 
@@ -45,16 +46,18 @@ function AppNavbar() {
             {!user && (
               <>
                 <Nav.Link
-                  as={Link}
+                  as={NavLink}
                   to="/"
+                  end
                   onClick={() => setExpanded(false)}
                 >
                   Login
                 </Nav.Link>
 
                 <Nav.Link
-                  as={Link}
+                  as={NavLink}
                   to="/register"
+                  end
                   onClick={() => setExpanded(false)}
                 >
                   Register
@@ -65,24 +68,27 @@ function AppNavbar() {
             {user && (
               <>
                 <Nav.Link
-                  as={Link}
+                  as={NavLink}
                   to="/dashboard"
+                  end
                   onClick={() => setExpanded(false)}
                 >
                   Dashboard
                 </Nav.Link>
 
                 <Nav.Link
-                  as={Link}
+                  as={NavLink}
                   to="/subjects"
+                  end
                   onClick={() => setExpanded(false)}
                 >
                   Subjects
                 </Nav.Link>
 
                 <Nav.Link
-                  as={Link}
+                  as={NavLink}
                   to="/profile"
+                  end
                   onClick={() => setExpanded(false)}
                 >
                   Profile
@@ -93,19 +99,33 @@ function AppNavbar() {
                   size="sm"
                   className="logout-btn"
                   onClick={() => {
-                    setExpanded(false)
-                    handleLogout()
+                    setExpanded(false);
+                    handleLogout();
                   }}
                 >
                   Logout
                 </Button>
               </>
             )}
+
+            {/* Button to switch between light and dark themes. */}
+            <Button
+              variant="outline-light"
+              size="sm"
+              className="ms-lg-3 mt-2 mt-lg-0"
+              onClick={() => {
+                toggleTheme();
+                setExpanded(false);
+              }}
+              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+            >
+              {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+            </Button>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  )
+  );
 }
 
-export default AppNavbar
+export default AppNavbar;

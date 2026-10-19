@@ -16,7 +16,7 @@ function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null)
 
   const [targetHours, setTargetHours] = useState(
-    Number(localStorage.getItem(`targetHours_${loggedInUserId}`)) || 50
+    Number(localStorage.getItem(`targetHours_${loggedInUserId}`)) || 20
   )
 
 
@@ -46,7 +46,7 @@ function Dashboard() {
   }
 
   return (
-    <Container className="mt-5 pt-4">
+    <Container className="dashboard-container">
       <h2 className="text-center mb-4">
         Welcome {user?.name}
       </h2>

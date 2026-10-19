@@ -2,12 +2,22 @@
 
 body {
   margin: 0;
-  background: #f5f7fb;
+  background: #ffffff;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   color: #212529;
   min-height: 100vh;
   padding-top: 70px;
 }
+
+/* Match the page background to the selected theme */
+body:has(.app.light-theme) {
+  background: #ffffff;
+}
+
+body:has(.app.dark-theme) {
+  background: #121212;
+}
+
 
 h1,
 h2,
@@ -393,4 +403,178 @@ h6 {
   .auth-card .form-control::placeholder {
     font-size: 13px;
   }
+}
+
+/* Light and dark theme styles */
+.app {
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app.light-theme {
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.app.dark-theme {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+/* Dark theme styles for common content containers */
+.dark-theme .card,
+.dark-theme .modal-content,
+.dark-theme .dropdown-menu {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  border-color: #444;
+}
+
+.dark-theme .form-control,
+.dark-theme .form-select {
+  background-color: #2b2b2b;
+  color: #f5f5f5;
+  border-color: #555;
+}
+
+.dark-theme .form-control::placeholder {
+  color: #bdbdbd;
+}
+
+.dark-theme .text-muted {
+  color: #bdbdbd !important;
+}
+
+
+/* Improve text visibility in dark mode */
+.dark-theme {
+  color: #f1f5f9;
+}
+
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3,
+.dark-theme h4,
+.dark-theme h5,
+.dark-theme h6,
+.dark-theme p,
+.dark-theme label,
+.dark-theme span,
+.dark-theme li {
+  color: #f1f5f9;
+}
+
+/* Ensure headings and text inside cards are readable */
+.dark-theme .card-title,
+.dark-theme .card-text,
+.dark-theme .card-body,
+.dark-theme .form-label {
+  color: #f1f5f9;
+}
+
+/* Improve input text and placeholder visibility */
+.dark-theme .form-control,
+.dark-theme .form-select {
+  color: #f1f5f9;
+  background-color: #252525;
+  border-color: #666;
+}
+
+.dark-theme .form-control::placeholder {
+  color: #cbd5e1;
+  opacity: 1;
+}
+
+/* Keep muted text readable */
+.dark-theme .text-muted {
+  color: #cbd5e1 !important;
+}
+
+/* Improve table text visibility */
+.dark-theme .table {
+  --bs-table-color: #f1f5f9;
+  --bs-table-bg: #1e1e1e;
+  --bs-table-border-color: #444;
+}
+
+/* Preserve readable links in dark mode */
+.dark-theme a:not(.btn):not(.navbar-brand) {
+  color: #93c5fd;
+}
+
+
+/* Make the main application background follow the selected theme */
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.app.light-theme {
+  background-color: #ffffff;
+}
+
+.app.dark-theme {
+  background-color: #121212;
+}
+
+
+/* Fix the Subjects form panel in dark mode */
+.dark-theme .subject-form,
+.dark-theme .subjects-form,
+.dark-theme .subject-form .card,
+.dark-theme .subjects-form .card {
+  background-color: #1e1e1e;
+  color: #f1f5f9;
+  border-color: #444;
+}
+
+
+/* Improve Login and Register form visibility in dark mode */
+.dark-theme .auth-card {
+  background-color: #1e1e1e !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #444;
+}
+
+.dark-theme .auth-card h1,
+.dark-theme .auth-card h2,
+.dark-theme .auth-card h3,
+.dark-theme .auth-card label,
+.dark-theme .auth-card p,
+.dark-theme .auth-card span {
+  color: #f1f5f9 !important;
+}
+
+.dark-theme .auth-card a {
+  color: #93c5fd !important;
+}
+
+.dark-theme .auth-card .form-control {
+  background-color: #2b2b2b;
+  color: #f1f5f9;
+  border-color: #666;
+}
+
+.dark-theme .auth-card .form-control::placeholder {
+  color: #cbd5e1;
+  opacity: 1;
+}
+
+
+/* Highlight the active page in the navbar */
+.app-navbar .nav-link.active {
+  color: #93c5fd !important;
+  background-color: rgba(147, 197, 253, 0.14);
+  border-radius: 6px;
+}
+
+/* Smooth transition when changing pages */
+.app-navbar .nav-link {
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
