@@ -10,7 +10,7 @@ import capitalizeWords from "../utils/formatText";
 function Register() {
 
   const navigate = useNavigate()
-  const [checkEmail] = useLazyCheckEmailQuery()
+  const [checkEmail, { isFetching: isCheckingEmail }] = useLazyCheckEmailQuery()
   const [registerUser, { isLoading }] = useRegisterUserMutation()
 
   const [name, setName] = useState("")
@@ -60,7 +60,11 @@ function Register() {
       <div className="auth-card">
         <h2>Register</h2>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+        {error && (
+          <Alert variant="danger" role="alert">
+            {error}
+          </Alert>
+        )}
 
         <Form onSubmit={handleRegister}>
           <Form.Group className="mb-3">
@@ -68,7 +72,15 @@ function Register() {
             <Form.Control
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value)
+                setError("")
+              }}
+              required
+              minLength={2}
+              autoComplete="name"
+              placeholder="Enter your full name"
+              aria-label="Full name"
             />
           </Form.Group>
 
@@ -77,7 +89,14 @@ function Register() {
             <Form.Control
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setError("")
+              }}
+              required
+              autoComplete="email"
+              placeholder="Enter your email"
+              aria-label="Email address"
             />
           </Form.Group>
 
@@ -86,13 +105,26 @@ function Register() {
             <Form.Control
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setError("")
+              }}
+              required
+              minLength={6}
+              autoComplete="new-password"
+              placeholder="Create a password"
+              aria-label="Password"
             />
           </Form.Group>
 
-          <Button variant="success" type="submit" disabled={isLoading}>
-            {isLoading ? "Registering..." : "Register"}
+          <Button
+            variant="success"
+            type="submit"
+            disabled={isLoading || isCheckingEmail}
+          >
+            {isLoading || isCheckingEmail ? "Registering..." : "Register"}
           </Button>
+
         </Form>
 
         <p>

@@ -1,4 +1,3 @@
-
 {
   "users": [
     {
@@ -33,12 +32,6 @@
     }
   ],
   "subjects": [
-    {
-      "id": "c828",
-      "name": "Arabic",
-      "hours": "3",
-      "userId": "4d71"
-    },
     {
       "id": "0bbe",
       "name": "Business",
@@ -110,6 +103,12 @@
       "name": "Arabic",
       "hours": "2",
       "userId": "ca5b"
+    },
+    {
+      "id": "deb4",
+      "name": "Logistics",
+      "hours": "2",
+      "userId": "4d71"
     }
   ]
 }

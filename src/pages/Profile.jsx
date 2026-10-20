@@ -17,7 +17,7 @@ function Profile() {
     setMessage("")
     setError("")
 
-    if (!name) {
+    if (!name.trim()) {
       setError("Name is required")
       return
     }
@@ -30,7 +30,7 @@ function Profile() {
     try {
       const updatedUser = {
         ...user,
-        name,
+        name: name.trim(),
         ...(password && { password }),
       }
 
@@ -53,8 +53,17 @@ function Profile() {
       <Card className="auth-card">
         <h2>Profile</h2>
 
-        {message && <Alert variant="success">{message}</Alert>}
-        {error && <Alert variant="danger">{error}</Alert>}
+        {message && (
+          <Alert variant="success" role="status">
+            {message}
+          </Alert>
+        )}
+
+        {error && (
+          <Alert variant="danger" role="alert">
+            {error}
+          </Alert>
+        )}
 
         <Form onSubmit={handleUpdate}>
           <Form.Group className="mb-3">
@@ -62,7 +71,15 @@ function Profile() {
             <Form.Control
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value)
+                setMessage("")
+                setError("")
+              }}
+              required
+              minLength={2}
+              autoComplete="name"
+              aria-label="Full name"
             />
           </Form.Group>
 
@@ -81,7 +98,14 @@ function Profile() {
               type="password"
               placeholder="Leave blank to keep current password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setMessage("")
+                setError("")
+              }}
+              minLength={6}
+              autoComplete="new-password"
+              aria-label="New password"
             />
           </Form.Group>
 

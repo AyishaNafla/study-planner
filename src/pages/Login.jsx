@@ -47,7 +47,11 @@ function Login() {
       <div className="auth-card">
         <h2>Login</h2>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+        {error && (
+          <Alert variant="danger" role="alert">
+            {error}
+          </Alert>
+        )}
 
         <Form onSubmit={handleLogin}>
           <Form.Group className="mb-3">
@@ -55,7 +59,14 @@ function Login() {
             <Form.Control
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+              required
+              autoComplete="email"
+              placeholder="Enter your email"
+              aria-label="Email address"
             />
           </Form.Group>
 
@@ -64,7 +75,15 @@ function Login() {
             <Form.Control
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
+              required
+              minLength={6}
+              autoComplete="current-password"
+              placeholder="Enter your password"
+              aria-label="Password"
             />
           </Form.Group>
 

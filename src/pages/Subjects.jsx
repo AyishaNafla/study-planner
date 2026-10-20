@@ -14,8 +14,11 @@ import {
   Card,
   Row,
   Col,
+  Alert,
+  Placeholder,
 } from "react-bootstrap";
 import capitalizeWords from "../utils/formatText";
+import { toast } from "react-toastify";
 
 function Subjects() {
   // Read search and filter values from the URL.
@@ -23,7 +26,6 @@ function Subjects() {
 
   const searchTerm = searchParams.get("search") || "";
   const selectedHours = searchParams.get("hours") || "all";
-
   const selectedSort = searchParams.get("sort") || "name-asc";
 
   // Get subjects belonging to the logged-in user.
@@ -38,13 +40,18 @@ function Subjects() {
     skip: !loggedInUserId,
   });
 
-  const [addSubject] = useAddSubjectMutation();
-  const [updateSubject] = useUpdateSubjectMutation();
+  const [addSubject, { isLoading: isAdding }] = useAddSubjectMutation();
+  const [updateSubject, { isLoading: isUpdating }] =
+    useUpdateSubjectMutation();
   const [deleteSubject] = useDeleteSubjectMutation();
 
   const [name, setName] = useState("");
   const [hours, setHours] = useState("");
   const [editId, setEditId] = useState(null);
+  const [formError, setFormError] = useState("");
+
+  // Check whether a subject is currently being saved.
+  const isSaving = isAdding || isUpdating;
 
   // Filter subjects by name and study hours.
   const filteredSubjects = fetchedSubjects.filter((sub) => {
@@ -105,34 +112,55 @@ function Subjects() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name.trim() || Number(hours) <= 0) {
+    const trimmedName = name.trim();
+    const studyHours = Number(hours);
+
+    if (!trimmedName || trimmedName.length < 2) {
+      setFormError("Please enter a subject name with at least 2 characters.");
       return;
     }
+
+    if (
+      !hours.trim() ||
+      !Number.isFinite(studyHours) ||
+      studyHours <= 0
+    ) {
+      setFormError("Please enter valid study hours greater than zero.");
+      return;
+    }
+
+    setFormError("");
 
     try {
       if (editId) {
         // Update an existing subject.
         await updateSubject({
           id: editId,
-          name: capitalizeWords(name),
-          hours,
+          name: capitalizeWords(trimmedName),
+          hours: String(studyHours),
           userId: loggedInUserId,
         }).unwrap();
 
         setEditId(null);
+        toast.success("Subject updated successfully!");
       } else {
         // Add a new subject.
         await addSubject({
-          name: capitalizeWords(name),
-          hours,
+          name: capitalizeWords(trimmedName),
+          hours: String(studyHours),
           userId: loggedInUserId,
         }).unwrap();
+
+        toast.success("Subject added successfully!");
       }
 
       setName("");
       setHours("");
+      setFormError("");
     } catch (err) {
-      console.log(err);
+      console.error("Failed to save subject:", err);
+      setFormError("Unable to save the subject. Please try again.");
+      toast.error("Failed to save subject. Please try again.");
     }
   };
 
@@ -141,14 +169,18 @@ function Subjects() {
     try {
       await deleteSubject(id).unwrap();
 
+      toast.success("Subject deleted successfully!");
+
       // Clear the form if the deleted subject was being edited.
       if (String(editId) === String(id)) {
         setEditId(null);
         setName("");
         setHours("");
+        setFormError("");
       }
     } catch (err) {
-      console.log(err);
+      console.error("Failed to delete subject:", err);
+      toast.error("Failed to delete subject. Please try again.");
     }
   };
 
@@ -157,6 +189,15 @@ function Subjects() {
     setName(sub.name);
     setHours(sub.hours);
     setEditId(sub.id);
+    setFormError("");
+  };
+
+  // Cancel editing and reset the form.
+  const handleCancelEdit = () => {
+    setEditId(null);
+    setName("");
+    setHours("");
+    setFormError("");
   };
 
   return (
@@ -166,14 +207,25 @@ function Subjects() {
       {/* Add or update subject form */}
       <Card className="p-4 mb-4 shadow-sm">
         <Form onSubmit={handleSubmit} className="subject-form">
+          {formError && (
+            <Alert variant="danger" role="alert">
+              {formError}
+            </Alert>
+          )}
+
           <Row>
             <Col md={5}>
               <Form.Control
                 type="text"
                 placeholder="Subject name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setFormError("");
+                }}
                 required
+                minLength={2}
+                aria-label="Subject name"
               />
             </Col>
 
@@ -184,14 +236,26 @@ function Subjects() {
                 min="0.1"
                 step="0.1"
                 value={hours}
-                onChange={(e) => setHours(e.target.value)}
+                onChange={(e) => {
+                  setHours(e.target.value);
+                  setFormError("");
+                }}
                 required
+                aria-label="Study hours"
               />
             </Col>
 
             <Col md={3}>
-              <Button type="submit" className="w-100">
-                {editId ? "Update Subject" : "Add Subject"}
+              <Button
+                type="submit"
+                className="w-100"
+                disabled={isSaving}
+              >
+                {isSaving
+                  ? "Saving..."
+                  : editId
+                    ? "Update Subject"
+                    : "Add Subject"}
               </Button>
             </Col>
           </Row>
@@ -201,11 +265,8 @@ function Subjects() {
               type="button"
               variant="secondary"
               className="mt-3"
-              onClick={() => {
-                setEditId(null);
-                setName("");
-                setHours("");
-              }}
+              onClick={handleCancelEdit}
+              disabled={isSaving}
             >
               Cancel Edit
             </Button>
@@ -213,7 +274,6 @@ function Subjects() {
         </Form>
       </Card>
 
-      
       {/* Search, study-hours filter, and sorting */}
       <Row className="mb-3">
         <Col md={4} className="mb-2">
@@ -255,12 +315,49 @@ function Subjects() {
             aria-label="Sort subjects"
           >
             <option value="name-asc">Name (A–Z)</option>
-            <option value="hours-asc">Study Hours (Low to High)</option>
+            <option value="hours-asc">
+              Study Hours (Low to High)
+            </option>
           </Form.Select>
         </Col>
       </Row>
 
-      {/* Display filtered subject cards */}
+
+      {/* Skeleton cards while subjects are loading */}
+      {isLoading && (
+        <Row aria-label="Loading subjects" role="status">
+          {[1, 2, 3].map((item) => (
+            <Col md={4} key={item} className="mb-3">
+              <Card className="shadow-sm h-100">
+                <Card.Body>
+                  <Placeholder as={Card.Title} animation="glow">
+                    <Placeholder xs={7} />
+                  </Placeholder>
+
+                  <Placeholder as={Card.Text} animation="glow">
+                    <Placeholder xs={5} />
+                  </Placeholder>
+
+                  <Placeholder animation="glow">
+                    <Placeholder.Button xs={4} />
+                    {" "}
+                    <Placeholder.Button xs={3} />
+                  </Placeholder>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+
+
+      {isError && (
+        <Alert variant="danger" role="alert">
+          Unable to load subjects. Please try again.
+        </Alert>
+      )}
+
+      {/* Display empty-state messages */}
       {!isLoading && !isError && sortedSubjects.length === 0 && (
         <p className="text-center">
           {fetchedSubjects.length === 0
@@ -269,47 +366,50 @@ function Subjects() {
         </p>
       )}
 
+      {/* Display filtered subject cards */}
       <Row>
-        {sortedSubjects.map((sub) => (
-          <Col md={4} key={sub.id} className="mb-3">
-            <Card className="shadow-sm subject-card h-100">
-              <Card.Body className="d-flex flex-column">
-                <Card.Title>{sub.name}</Card.Title>
+        {!isLoading &&
+          !isError &&
+          sortedSubjects.map((sub) => (
+            <Col md={4} key={sub.id} className="mb-3">
+              <Card className="shadow-sm subject-card h-100">
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title>{sub.name}</Card.Title>
 
-                <Card.Text>
-                  Study Hours: {sub.hours}
-                </Card.Text>
+                  <Card.Text>Study Hours: {sub.hours}</Card.Text>
 
-                <div className="d-flex gap-2 flex-wrap mt-auto">
-                  <Button
-                    as={Link}
-                    to={`/subjects/${sub.id}`}
-                    variant="primary"
-                    size="sm"
-                  >
-                    View Details
-                  </Button>
+                  <div className="d-flex gap-2 flex-wrap mt-auto">
+                    <Button
+                      as={Link}
+                      to={`/subjects/${sub.id}`}
+                      variant="primary"
+                      size="sm"
+                    >
+                      View Details
+                    </Button>
 
-                  <Button
-                    variant="warning"
-                    size="sm"
-                    onClick={() => handleEdit(sub)}
-                  >
-                    Edit
-                  </Button>
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      onClick={() => handleEdit(sub)}
+                      disabled={isSaving}
+                    >
+                      Edit
+                    </Button>
 
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(sub.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(sub.id)}
+                      disabled={isSaving}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
       </Row>
     </Container>
   );
