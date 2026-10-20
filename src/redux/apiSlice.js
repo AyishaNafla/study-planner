@@ -17,6 +17,14 @@ export const apiSlice = createApi({
             providesTags: ["Subject"],
         }),
 
+        // Fetch a single subject by its ID.
+        getSubjectById: builder.query({
+            query: (id) => `/subjects/${id}`,
+            providesTags: (result, error, id) => [
+                { type: "Subject", id },
+            ],
+        }),
+
         // Fetch a user by email for login.
         getUserByEmail: builder.query({
             query: (email) => `/users?email=${encodeURIComponent(email)}`,
@@ -86,6 +94,7 @@ export const apiSlice = createApi({
 
 export const {
     useGetSubjectsQuery,
+    useGetSubjectByIdQuery,
     useAddSubjectMutation,
     useUpdateSubjectMutation,
     useDeleteSubjectMutation,
