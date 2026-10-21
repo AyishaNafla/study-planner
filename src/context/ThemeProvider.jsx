@@ -1,7 +1,5 @@
-import { createContext, useState } from "react";
-
-// Create a context to share the theme across components.
-export const ThemeContext = createContext();
+import { useState } from "react";
+import { ThemeContext } from "./themeContext";
 
 // Provide the selected theme to child components.
 export const ThemeProvider = ({ children }) => {

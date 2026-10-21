@@ -1,30 +1,38 @@
-import { useState } from "react"
-import { useUpdateUserMutation } from "../redux/apiSlice"
-import { Form, Button, Alert, Card } from "react-bootstrap"
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useUpdateUserMutation } from "../redux/apiSlice";
+import { login } from "../redux/authSlice";
+import { Form, Button, Alert, Card } from "react-bootstrap";
 
 function Profile() {
-  const user = JSON.parse(localStorage.getItem("user"))
-  const [updateUser, { isLoading }] = useUpdateUserMutation()
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
 
-  const [name, setName] = useState(user?.name || "")
-  const [password, setPassword] = useState("")
-  const [message, setMessage] = useState("")
-  const [error, setError] = useState("")
+  const [name, setName] = useState(user?.name || "");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const handleUpdate = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setMessage("")
-    setError("")
+    setMessage("");
+    setError("");
 
-    if (!name.trim()) {
-      setError("Name is required")
-      return
+    if (!name.trim() || name.trim().length < 2) {
+      setError("Name must contain at least 2 characters.");
+      return;
     }
 
     if (password && password.length < 6) {
-      setError("Password must be at least 6 characters")
-      return
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (!user?.id) {
+      setError("Unable to identify the logged-in user. Please log in again.");
+      return;
     }
 
     try {
@@ -32,21 +40,23 @@ function Profile() {
         ...user,
         name: name.trim(),
         ...(password && { password }),
-      }
+      };
 
       await updateUser({
         id: user.id,
         ...updatedUser,
-      }).unwrap()
+      }).unwrap();
 
-      localStorage.setItem("user", JSON.stringify(updatedUser))
+      // Update Redux state and localStorage together.
+      dispatch(login(updatedUser));
 
-      setPassword("")
-      setMessage("Profile updated successfully")
-    } catch {
-      setError("Profile update failed")
+      setPassword("");
+      setMessage("Profile updated successfully.");
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+      setError("Profile update failed. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="auth-container">
@@ -72,9 +82,9 @@ function Profile() {
               type="text"
               value={name}
               onChange={(e) => {
-                setName(e.target.value)
-                setMessage("")
-                setError("")
+                setName(e.target.value);
+                setMessage("");
+                setError("");
               }}
               required
               minLength={2}
@@ -89,6 +99,7 @@ function Profile() {
               type="email"
               value={user?.email || ""}
               disabled
+              aria-label="Email address"
             />
           </Form.Group>
 
@@ -99,9 +110,9 @@ function Profile() {
               placeholder="Leave blank to keep current password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value)
-                setMessage("")
-                setError("")
+                setPassword(e.target.value);
+                setMessage("");
+                setError("");
               }}
               minLength={6}
               autoComplete="new-password"
@@ -115,7 +126,7 @@ function Profile() {
         </Form>
       </Card>
     </div>
-  )
+  );
 }
 
-export default Profile
+export default Profile;

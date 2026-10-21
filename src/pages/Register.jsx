@@ -43,7 +43,7 @@ function Register() {
       }
 
       await registerUser({
-        name: capitalizeWords(name),
+        name: capitalizeWords(name.trim()),
         email: email.trim(),
         password,
       }).unwrap()

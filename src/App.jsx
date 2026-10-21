@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -15,7 +14,7 @@ import NotFound from "./pages/NotFound";
 import useTheme from "./hooks/useTheme";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-// Keep the navbar visible across all pages.
+// Shared layout for public pages.
 function MainLayout() {
   return (
     <>
@@ -29,17 +28,17 @@ function App() {
   const { theme } = useTheme();
 
   return (
-  <ErrorBoundary>
-    <div className={`app ${theme}-theme`}>
-      <BrowserRouter>
-        <Routes>
-          {/* Shared navbar layout for all pages */}
-          <Route element={<MainLayout />}>
-            {/* Public routes */}
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+    <ErrorBoundary>
+      <div className={`app ${theme}-theme`}>
+        <BrowserRouter>
+          <Routes>
+            {/* Public routes with the shared navbar */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
 
-            {/* Protected routes with a nested layout */}
+            {/* Protected routes with authentication and their own navbar */}
             <Route
               element={
                 <ProtectedRoute>
@@ -55,21 +54,20 @@ function App() {
 
             {/* Display the 404 page for unknown URLs */}
             <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
+          </Routes>
 
-        {/* One shared notification container for the application */}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          newestOnTop
-          closeOnClick
-          pauseOnHover
-          theme={theme === "dark" ? "dark" : "light"}
-        />
-      </BrowserRouter>
-    </div>
-  </ErrorBoundary>
+          {/* One shared notification container for the application */}
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            theme={theme === "dark" ? "dark" : "light"}
+          />
+        </BrowserRouter>
+      </div>
+    </ErrorBoundary>
   );
 }
 

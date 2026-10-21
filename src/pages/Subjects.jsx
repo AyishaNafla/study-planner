@@ -1,24 +1,11 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import {
-  useGetSubjectsQuery,
-  useAddSubjectMutation,
-  useUpdateSubjectMutation,
-  useDeleteSubjectMutation,
-} from "../redux/apiSlice";
-import {
-  Container,
-  Form,
-  Button,
-  Card,
-  Row,
-  Col,
-  Alert,
-  Placeholder,
-} from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
+import { useGetSubjectsQuery, useAddSubjectMutation, useUpdateSubjectMutation, useDeleteSubjectMutation } from "../redux/apiSlice";
+import { Container, Form, Card, Row, Col, Alert, Placeholder } from "react-bootstrap";
 import capitalizeWords from "../utils/formatText";
 import { toast } from "react-toastify";
+import SubjectCard from "../components/SubjectCard";
+import SubjectForm from "../components/SubjectForm";
 
 function Subjects() {
   // Read search and filter values from the URL.
@@ -204,75 +191,24 @@ function Subjects() {
     <Container className="dashboard-container">
       <h2 className="text-center mb-4">📚 Subjects</h2>
 
-      {/* Add or update subject form */}
-      <Card className="p-4 mb-4 shadow-sm">
-        <Form onSubmit={handleSubmit} className="subject-form">
-          {formError && (
-            <Alert variant="danger" role="alert">
-              {formError}
-            </Alert>
-          )}
-
-          <Row>
-            <Col md={5}>
-              <Form.Control
-                type="text"
-                placeholder="Subject name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setFormError("");
-                }}
-                required
-                minLength={2}
-                aria-label="Subject name"
-              />
-            </Col>
-
-            <Col md={4}>
-              <Form.Control
-                type="number"
-                placeholder="Study hours"
-                min="0.1"
-                step="0.1"
-                value={hours}
-                onChange={(e) => {
-                  setHours(e.target.value);
-                  setFormError("");
-                }}
-                required
-                aria-label="Study hours"
-              />
-            </Col>
-
-            <Col md={3}>
-              <Button
-                type="submit"
-                className="w-100"
-                disabled={isSaving}
-              >
-                {isSaving
-                  ? "Saving..."
-                  : editId
-                    ? "Update Subject"
-                    : "Add Subject"}
-              </Button>
-            </Col>
-          </Row>
-
-          {editId && (
-            <Button
-              type="button"
-              variant="secondary"
-              className="mt-3"
-              onClick={handleCancelEdit}
-              disabled={isSaving}
-            >
-              Cancel Edit
-            </Button>
-          )}
-        </Form>
-      </Card>
+      {/* Add or update subject form using the reusable component */}
+      <SubjectForm
+        name={name}
+        hours={hours}
+        editId={editId}
+        formError={formError}
+        isSaving={isSaving}
+        onNameChange={(value) => {
+          setName(value);
+          setFormError("");
+        }}
+        onHoursChange={(value) => {
+          setHours(value);
+          setFormError("");
+        }}
+        onSubmit={handleSubmit}
+        onCancel={handleCancelEdit}
+      />
 
       {/* Search, study-hours filter, and sorting */}
       <Row className="mb-3">
@@ -322,7 +258,6 @@ function Subjects() {
         </Col>
       </Row>
 
-
       {/* Skeleton cards while subjects are loading */}
       {isLoading && (
         <Row aria-label="Loading subjects" role="status">
@@ -350,7 +285,7 @@ function Subjects() {
         </Row>
       )}
 
-
+      {/* Display an error if subjects cannot be loaded */}
       {isError && (
         <Alert variant="danger" role="alert">
           Unable to load subjects. Please try again.
@@ -366,48 +301,18 @@ function Subjects() {
         </p>
       )}
 
-      {/* Display filtered subject cards */}
+      {/* Display filtered subject cards using the reusable component */}
       <Row>
         {!isLoading &&
           !isError &&
           sortedSubjects.map((sub) => (
             <Col md={4} key={sub.id} className="mb-3">
-              <Card className="shadow-sm subject-card h-100">
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title>{sub.name}</Card.Title>
-
-                  <Card.Text>Study Hours: {sub.hours}</Card.Text>
-
-                  <div className="d-flex gap-2 flex-wrap mt-auto">
-                    <Button
-                      as={Link}
-                      to={`/subjects/${sub.id}`}
-                      variant="primary"
-                      size="sm"
-                    >
-                      View Details
-                    </Button>
-
-                    <Button
-                      variant="warning"
-                      size="sm"
-                      onClick={() => handleEdit(sub)}
-                      disabled={isSaving}
-                    >
-                      Edit
-                    </Button>
-
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleDelete(sub.id)}
-                      disabled={isSaving}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </Card.Body>
-              </Card>
+              <SubjectCard
+                subject={sub}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                isSaving={isSaving}
+              />
             </Col>
           ))}
       </Row>

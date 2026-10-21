@@ -2,11 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Restore the logged-in user from localStorage when the app starts.
 const savedUser = localStorage.getItem("user");
+const parsedUser = savedUser ? JSON.parse(savedUser) : null;
 
 const initialState = {
-  user: savedUser ? JSON.parse(savedUser) : null,
-  isLoggedIn: savedUser ? true : false,
-  role: savedUser ? JSON.parse(savedUser).role || "user" : null,
+  user: parsedUser,
+  isLoggedIn: Boolean(parsedUser),
+  role: parsedUser ? parsedUser.role || "user" : null,
 };
 
 const authSlice = createSlice({
