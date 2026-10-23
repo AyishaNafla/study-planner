@@ -29,6 +29,24 @@
       "name": "Ayisha Azrin",
       "email": "azrin@gmail.com",
       "password": "aachu123"
+    },
+    {
+      "id": "3fee",
+      "name": "Naifa",
+      "email": "naifa@gmail.com",
+      "password": "Naifa1"
+    },
+    {
+      "id": "ae1c",
+      "name": "Faseela",
+      "email": "faseela@gmail.com",
+      "password": "fasino123"
+    },
+    {
+      "id": "6a07",
+      "name": "Noufal",
+      "email": "noufal@gmail.com",
+      "password": "noufal123"
     }
   ],
   "subjects": [
@@ -51,22 +69,10 @@
       "userId": "c225"
     },
     {
-      "name": "English",
-      "hours": "2",
-      "userId": "c225",
-      "id": "95f0"
-    },
-    {
       "name": "React",
       "hours": "3",
       "userId": "c225",
       "id": "7e6a"
-    },
-    {
-      "id": "b853",
-      "name": "English",
-      "hours": "1.5",
-      "userId": "80ee"
     },
     {
       "id": "85a2",
@@ -79,18 +85,6 @@
       "name": "Business",
       "hours": "2",
       "userId": "4d71"
-    },
-    {
-      "id": "8d59",
-      "name": "Accountancy",
-      "hours": "2.5",
-      "userId": "4d71"
-    },
-    {
-      "id": "8282",
-      "name": "English",
-      "hours": "1",
-      "userId": "ca5b"
     },
     {
       "id": "418b",
@@ -109,6 +103,18 @@
       "name": "Logistics",
       "hours": "2",
       "userId": "4d71"
+    },
+    {
+      "id": "cb64",
+      "name": "Business",
+      "hours": "2",
+      "userId": "ae1c"
+    },
+    {
+      "id": "8b4c",
+      "name": "English",
+      "hours": "3",
+      "userId": "6a07"
     }
   ]
 }

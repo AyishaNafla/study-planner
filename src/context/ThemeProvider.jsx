@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { ThemeContext } from "./themeContext";
 
 // Provide the selected theme to child components.
@@ -8,15 +9,15 @@ export const ThemeProvider = ({ children }) => {
     return localStorage.getItem("theme") || "light";
   });
 
+  // Save the selected theme whenever it changes.
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   // Switch between light and dark themes.
   const toggleTheme = () => {
     setTheme((currentTheme) => {
-      const newTheme = currentTheme === "light" ? "dark" : "light";
-
-      // Save the selected theme for future visits.
-      localStorage.setItem("theme", newTheme);
-
-      return newTheme;
+      return currentTheme === "light" ? "dark" : "light";
     });
   };
 
